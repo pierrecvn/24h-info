@@ -1,0 +1,117 @@
+name: Déploiement du site 24h-info
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Configuration de Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: "**/package-lock.json"
+
+      - name: Test de connexion SSH
+        uses: appleboy/ssh-action@master
+        with:
+          host: sajima.fr
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            echo "Connexion SSH réussie"
+            whoami
+            pwd
+
+      - name: Installation des dépendances du site
+        run: |
+          npm ci
+
+      - name: Build du site
+        run: |
+          npm run build
+
+      - name: Compression du build
+        run: |
+          mkdir -p deploy
+          tar -czf deploy/24h-info.tar.gz dist
+
+      - name: Déploiement sur le serveur
+        uses: appleboy/scp-action@master
+        with:
+          host: sajima.fr
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          source: "deploy/*"
+          target: "/var/www/24h-info"
+
+      - name: Configuration et démarrage du service
+        uses: appleboy/ssh-action@master
+        with:
+          host: sajima.fr
+          username: ${{ secrets.SSH_USERNAME }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: |
+            # Créer le dossier si nécessaire
+            mkdir -p /var/www/24h-info/site
+            
+            # Décompression de l'archive
+            tar -xzf /var/www/24h-info/deploy/24h-info.tar.gz -C /var/www/24h-info/site --strip-components=1
+
+            # Correction des permissions
+            chmod -R 755 /var/www/24h-info/site
+            chown -R www-data:www-data /var/www/24h-info/site
+
+            # Configuration NGINX pour le site 24h-info
+            cat > /etc/nginx/sites-available/24h-info << 'EOL'
+            server {
+              listen 80;
+              server_name 24h-info.sajima.fr;
+              return 301 https://$host$request_uri;
+            }
+
+            server {
+              listen 443 ssl;
+              server_name 24h-info.sajima.fr;
+
+              ssl_certificate /etc/letsencrypt/live/sajima.fr/fullchain.pem;
+              ssl_certificate_key /etc/letsencrypt/live/sajima.fr/privkey.pem;
+              ssl_trusted_certificate /etc/letsencrypt/live/sajima.fr/chain.pem;
+
+              ssl_protocols TLSv1.2 TLSv1.3;
+              ssl_prefer_server_ciphers on;
+              ssl_ciphers ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384;
+
+              ssl_session_timeout 1d;
+              ssl_session_cache shared:SSL:50m;
+              ssl_stapling on;
+              ssl_stapling_verify on;
+
+              root /var/www/24h-info/site;
+              index index.html;
+
+              location / {
+                try_files $uri $uri/ /index.html;
+              }
+            }
+            EOL
+
+            # Activer le site
+            ln -sf /etc/nginx/sites-available/24h-info /etc/nginx/sites-enabled/24h-info
+
+            # Vérifier et redémarrer NGINX
+            nginx -t && systemctl restart nginx
+
+            echo "Déploiement terminé!"
+
