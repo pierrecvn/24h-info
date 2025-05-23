@@ -67,7 +67,11 @@ jobs:
             mkdir -p /var/www/24h-info/site
             
             # Décompression de l'archive
-            tar -xzf /var/www/24h-info/deploy/24h-info.tar.gz -C /var/www/24h-info/site
+            tar -xzf /var/www/24h-info/deploy/24h-info.tar.gz -C /var/www/24h-info/site --strip-components=1
+
+            # Correction des permissions
+            chmod -R 755 /var/www/24h-info/site
+            chown -R www-data:www-data /var/www/24h-info/site
 
             # Configuration NGINX pour le site 24h-info
             cat > /etc/nginx/sites-available/24h-info << 'EOL'
@@ -104,9 +108,10 @@ jobs:
             EOL
 
             # Activer le site
-            ln -sf /etc/nginx/sites-available/24h-info /etc/nginx/sites-enabled/
+            ln -sf /etc/nginx/sites-available/24h-info /etc/nginx/sites-enabled/24h-info
 
             # Vérifier et redémarrer NGINX
             nginx -t && systemctl restart nginx
 
             echo "Déploiement terminé!"
+
