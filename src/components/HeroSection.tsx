@@ -366,7 +366,7 @@ export const HeroSection = () => {
         {/* Cathédrale */}
         <div ref={cathedralRef} className="absolute bottom-0 left-1/2 transform -translate-x-1/2 w-full max-w-full">
             <img
-                src="../../../public/cathe.png"
+                src="/cathe.png"
                 alt="Cathédrale Saint-Jean"
                 className="justify-center mx-auto"
                 style={{
