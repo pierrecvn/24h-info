@@ -216,13 +216,13 @@ const Histoire = () => {
                   title: "Antoine de Saint-Exupéry",
                   description:
                       "Né à Lyon en 1900, cet aviateur et écrivain est l’auteur du célèbre Petit Prince. Il allie poésie, humanisme et aventure, et reste une figure emblématique de la littérature française.",
-                  link: "/public/exup.jpg"
+                  link: "exup.jpg"
                 },
                 {
                   title: "André-Marie Ampère",
                   description:
                       "Physicien et mathématicien né à Lyon en 1775, Ampère est l’un des fondateurs de l’électrodynamique. L’unité de mesure du courant électrique, l’ampère, porte son nom.",
-                  link: "/public/ampere.jpg"
+                  link: "ampere.jpg"
                 },
                 {
                   title: "Les Frères Lumière",
