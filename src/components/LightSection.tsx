@@ -52,8 +52,8 @@ const LightSection = () => {
             >
               <div className="text-center">
                 <div className={`w-16 h-16 mx-auto mb-4 rounded-full ${
-                  activeLight === index 
-                    ? 'bg-white/20 shadow-lg' 
+                  activeLight === index
+                    ? 'bg-white/20 shadow-lg'
                     : 'bg-gradient-to-br ' + effect.color
                 }`}>
                   <div className="w-full h-full rounded-full bg-gradient-radial from-white/40 to-transparent animate-pulse"></div>
@@ -86,47 +86,47 @@ const LightSection = () => {
             <div className="cathedral-interactive relative">
               <svg viewBox="0 0 300 400" className="w-full h-80">
                 {/* Corps principal */}
-                <rect 
-                  x="100" y="200" width="100" height="200" 
-                  fill="currentColor" 
+                <rect
+                  x="100" y="200" width="100" height="200"
+                  fill="currentColor"
                   className={`text-slate-600 transition-all duration-500 hover:text-amber-300 cursor-pointer ${
                     activeLight === 0 ? 'text-blue-400 drop-shadow-lg' : ''
                   }`}
                   onMouseEnter={() => handleLightHover(0)}
                 />
-                
+
                 {/* Tours */}
-                <rect 
-                  x="80" y="150" width="30" height="80" 
-                  fill="currentColor" 
+                <rect
+                  x="80" y="150" width="30" height="80"
+                  fill="currentColor"
                   className={`text-slate-600 transition-all duration-500 hover:text-amber-300 cursor-pointer ${
                     activeLight === 1 ? 'text-amber-400 drop-shadow-lg' : ''
                   }`}
                   onMouseEnter={() => handleLightHover(1)}
                 />
-                <rect 
-                  x="190" y="150" width="30" height="80" 
-                  fill="currentColor" 
+                <rect
+                  x="190" y="150" width="30" height="80"
+                  fill="currentColor"
                   className={`text-slate-600 transition-all duration-500 hover:text-amber-300 cursor-pointer ${
                     activeLight === 1 ? 'text-amber-400 drop-shadow-lg' : ''
                   }`}
                   onMouseEnter={() => handleLightHover(1)}
                 />
-                
+
                 {/* Rosace */}
-                <circle 
-                  cx="150" cy="250" r="20" 
-                  fill="currentColor" 
+                <circle
+                  cx="150" cy="250" r="20"
+                  fill="currentColor"
                   className={`text-slate-600 transition-all duration-500 hover:text-white cursor-pointer ${
                     activeLight === 2 ? 'text-white drop-shadow-lg' : ''
                   }`}
                   onMouseEnter={() => handleLightHover(2)}
                 />
-                
+
                 {/* Flèche */}
-                <polygon 
-                  points="150,100 130,150 170,150" 
-                  fill="currentColor" 
+                <polygon
+                  points="150,100 130,150 170,150"
+                  fill="currentColor"
                   className={`text-slate-600 transition-all duration-500 hover:text-teal-400 cursor-pointer ${
                     activeLight === 3 ? 'text-teal-400 drop-shadow-lg' : ''
                   }`}

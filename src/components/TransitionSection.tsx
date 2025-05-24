@@ -100,11 +100,11 @@ const TransitionSection = () => {
             <span className="block text-amber-300 mt-2">Fête des Lumières</span>
           </h2>
           <p className="text-xl md:text-2xl leading-relaxed opacity-90 mb-16 text-slate-200">
-            Chaque année, Lyon se transforme en un théâtre d'art et de lumière, 
-            où la Cathédrale Saint-Jean devient le témoin privilégié d'un spectacle féerique 
+            Chaque année, Lyon se transforme en un théâtre d'art et de lumière,
+            où la Cathédrale Saint-Jean devient le témoin privilégié d'un spectacle féerique
             qui illumine l'âme de la ville et touche le cœur de millions de visiteurs.
           </p>
-          
+
           {/* Boutons d'action améliorés */}
           <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
             <Link
@@ -114,7 +114,7 @@ const TransitionSection = () => {
               <span className="relative z-10">Explorer l'Histoire</span>
               <div className="absolute inset-0 bg-gradient-to-r from-amber-300 to-amber-400 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
-            
+
             <Link
               to="/galerie"
               className="group relative border-2 border-amber-300 text-amber-300 hover:text-slate-900 font-bold py-4 px-8 rounded-full transition-all duration-300 transform hover:scale-105 overflow-hidden"
