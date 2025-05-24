@@ -215,32 +215,38 @@ const Histoire = () => {
                 {
                   title: "Antoine de Saint-Exupéry",
                   description:
-                      "Né à Lyon en 1900, cet aviateur et écrivain est l’auteur du célèbre Petit Prince. Il allie poésie, humanisme et aventure, et reste une figure emblématique de la littérature française."
+                      "Né à Lyon en 1900, cet aviateur et écrivain est l’auteur du célèbre Petit Prince. Il allie poésie, humanisme et aventure, et reste une figure emblématique de la littérature française.",
+                  link: "/public/exup.jpg"
                 },
                 {
                   title: "André-Marie Ampère",
                   description:
-                      "Physicien et mathématicien né à Lyon en 1775, Ampère est l’un des fondateurs de l’électrodynamique. L’unité de mesure du courant électrique, l’ampère, porte son nom."
+                      "Physicien et mathématicien né à Lyon en 1775, Ampère est l’un des fondateurs de l’électrodynamique. L’unité de mesure du courant électrique, l’ampère, porte son nom.",
+                  link: "/public/ampere.jpg"
                 },
                 {
                   title: "Les Frères Lumière",
                   description:
-                      "Auguste et Louis Lumière, inventeurs lyonnais, ont réalisé en 1895 la première projection publique de cinéma. Leur invention, le cinématographe, a donné naissance à l'industrie cinématographique mondiale."
+                      "Auguste et Louis Lumière, inventeurs lyonnais, ont réalisé en 1895 la première projection publique de cinéma. Leur invention, le cinématographe, a donné naissance à l'industrie cinématographique mondiale.",
+                  link: "frere.jpg"
                 },
                 {
                   title: "Paul Bocuse",
                   description:
-                      "Chef cuisinier emblématique né près de Lyon en 1926, Paul Bocuse a révolutionné la gastronomie française avec la 'nouvelle cuisine'. Son restaurant triplement étoilé et son influence mondiale font de lui une figure centrale de l'identité culinaire lyonnaise."
+                      "Chef cuisinier emblématique né près de Lyon en 1926, Paul Bocuse a révolutionné la gastronomie française avec la 'nouvelle cuisine'. Son restaurant triplement étoilé et son influence mondiale font de lui une figure centrale de l'identité culinaire lyonnaise.",
+                  link: "paul.jpg"
                 },
                 {
                   title: "Édouard Herriot",
                   description:
-                      "Homme politique influent et maire de Lyon pendant plus de 50 ans au total (entre 1905 et 1957), Édouard Herriot a profondément transformé la ville avec la création de nombreuses infrastructures, dont l’Hôpital Édouard-Herriot. Il fut aussi président du Conseil et membre de l'Académie française."
+                      "Homme politique influent et maire de Lyon pendant plus de 50 ans au total (entre 1905 et 1957), Édouard Herriot a profondément transformé la ville avec la création de nombreuses infrastructures, dont l’Hôpital Édouard-Herriot. Il fut aussi président du Conseil et membre de l'Académie française.",
+                  link: "herriot.jpg"
                 },
                 {
                   title: "Tony Garnier",
                   description:
-                      "Architecte visionnaire du début du XXe siècle, Tony Garnier a imaginé la 'Cité industrielle' et conçu plusieurs bâtiments emblématiques de Lyon, comme le quartier des États-Unis, les abattoirs devenus la Halle Tony Garnier, et l’hôpital Grange-Blanche. Il incarne l'urbanisme moderne à Lyon."
+                      "Architecte visionnaire du début du XXe siècle, Tony Garnier a imaginé la 'Cité industrielle' et conçu plusieurs bâtiments emblématiques de Lyon, comme le quartier des États-Unis, les abattoirs devenus la Halle Tony Garnier, et l’hôpital Grange-Blanche. Il incarne l'urbanisme moderne à Lyon.",
+                  link: "garnier.jpeg"
                 }
               ].map((person, index) => (
                   <div
@@ -249,6 +255,7 @@ const Histoire = () => {
                   >
                     <h3 className="text-2xl font-bold text-amber-300 mb-4">{person.title}</h3>
                     <p className="text-slate-300 leading-relaxed">{person.description}</p>
+                    <img src={person.link} alt="" className="w-full h-64 object-cover rounded-xl" />
                   </div>
               ))}
             </div>
