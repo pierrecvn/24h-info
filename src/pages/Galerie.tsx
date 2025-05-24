@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import Navigation from '../components/Navigation';
@@ -39,32 +38,38 @@ const Galerie = () => {
     {
       title: "Cathédrale de Jour",
       description: "La majestueuse façade gothique sous le soleil lyonnais",
-      category: "Architecture"
+      category: "Architecture",
+      imageUrl: "/cathedrale.png"
     },
     {
       title: "Fête des Lumières 2023",
       description: "Projection spectaculaire sur la façade occidentale",
-      category: "Événement"
+      category: "Événement",
+      imageUrl: "/fete_lumiere.jpg"
     },
     {
       title: "Rosace Centrale",
       description: "Détail de la rosace médiévale et ses vitraux colorés",
-      category: "Détail"
+      category: "Détail",
+      imageUrl: "/rosase.jpg"
     },
     {
       title: "Illumination Dorée",
       description: "Éclairage nocturne mettant en valeur l'architecture",
-      category: "Nuit"
+      category: "Nuit",
+      imageUrl: "/illumination_doree.jpg"
     },
     {
       title: "Intérieur Sacré",
       description: "La nef gothique baignée de lumière divine",
-      category: "Intérieur"
+      category: "Intérieur",
+      imageUrl: "/interieur.jpg"
     },
     {
       title: "Mapping Numérique",
       description: "Art contemporain projeté sur les pierres millénaires",
-      category: "Événement"
+      category: "Événement",
+      imageUrl: "/lumiere.jpg"
     }
   ];
 
@@ -129,15 +134,15 @@ const Galerie = () => {
                 className="group relative bg-slate-800 rounded-xl overflow-hidden shadow-2xl hover:shadow-amber-300/20 transition-all duration-500 cursor-pointer transform hover:scale-105"
                 onClick={() => setSelectedImage(index)}
               >
-                {/* Image placeholder avec dégradé */}
-                <div className="aspect-[4/3] bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 relative overflow-hidden">
+                {/* Image avec overlay */}
+                <div className="aspect-[4/3] relative overflow-hidden">
+                  <img
+                    src={image.imageUrl}
+                    alt={image.title}
+                    className="w-full h-full object-cover"
+                  />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-16 h-16 border-4 border-amber-300/30 rounded-full flex items-center justify-center">
-                      <div className="w-8 h-8 bg-amber-300/20 rounded-full animate-pulse"></div>
-                    </div>
-                  </div>
-                  
+
                   {/* Overlay avec informations */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 text-white transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
                     <div className="bg-slate-900/80 backdrop-blur-sm rounded-lg p-4 border border-amber-300/20">
@@ -160,21 +165,24 @@ const Galerie = () => {
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center p-6" onClick={() => setSelectedImage(null)}>
           <div className="relative max-w-4xl w-full bg-slate-800 rounded-xl overflow-hidden">
             <button
-              onClick={() => setSelectedImage(null)}
+              onClick={(e) => {
+                e.stopPropagation();
+                setSelectedImage(null);
+              }}
               className="absolute top-4 right-4 w-10 h-10 bg-slate-900/80 hover:bg-slate-900 rounded-full flex items-center justify-center text-white z-10 transition-colors duration-200"
             >
               ✕
             </button>
             
-            <div className="aspect-[16/10] bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800 relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <div className="w-24 h-24 border-4 border-amber-300/30 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <div className="w-12 h-12 bg-amber-300/20 rounded-full animate-pulse"></div>
-                  </div>
-                  <h3 className="text-2xl font-bold mb-2">{filteredImages[selectedImage].title}</h3>
-                  <p className="text-slate-300">{filteredImages[selectedImage].description}</p>
-                </div>
+            <div className="aspect-[16/10] relative">
+              <img
+                src={filteredImages[selectedImage].imageUrl}
+                alt={filteredImages[selectedImage].title}
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/80 to-transparent">
+                <h3 className="text-2xl font-bold text-white mb-2">{filteredImages[selectedImage].title}</h3>
+                <p className="text-slate-300">{filteredImages[selectedImage].description}</p>
               </div>
             </div>
           </div>

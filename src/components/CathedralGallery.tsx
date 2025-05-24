@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 
 const CathedralGallery = () => {
@@ -7,19 +6,23 @@ const CathedralGallery = () => {
   const galleryImages = [
     {
       title: "Façade Illuminée",
-      description: "La façade gothique sous les projecteurs dorés de la Fête des Lumières"
+      description: "La façade gothique sous les projecteurs dorés de la Fête des Lumières",
+      imageUrl: "/nuit.jpg"
     },
     {
       title: "Rosace Mystique",
-      description: "Les vitraux révèlent leurs secrets sous la lumière nocturne"
+      description: "Les vitraux révèlent leurs secrets sous la lumière nocturne",
+      imageUrl: "/rosase_nuit.jpg"
     },
     {
       title: "Tours Majestueuses",
-      description: "Les tours de la cathédrale se dressent vers le ciel étoilé"
+      description: "Les tours de la cathédrale se dressent vers le ciel étoilé",
+      imageUrl: "/tours.jpg"
     },
     {
-      title: "Reflets sur Saône",
-      description: "La cathédrale se mire dans les eaux calmes de la Saône"
+      title: "Vue depuis la Saône",
+      description: "La cathédrale s'admire depuis les eaux calmes de la Saône",
+      imageUrl: "/saone.jpg"
     }
   ];
 
@@ -41,13 +44,21 @@ const CathedralGallery = () => {
           {/* Zone d'affichage principale */}
           <div className="relative">
             <div className="aspect-square bg-slate-700 rounded-2xl overflow-hidden shadow-2xl">
-              <div className="w-full h-full bg-gradient-to-br from-slate-600 to-slate-800 flex items-center justify-center">
-                <div className="text-center text-white">
-                  <div className="w-32 h-32 mx-auto mb-6 bg-gradient-to-br from-amber-300 to-amber-500 rounded-full flex items-center justify-center shadow-2xl">
-                    <span className="text-4xl">🏰</span>
-                  </div>
+              <div className="w-full h-full relative">
+                <img
+                  src={galleryImages[selectedImage].imageUrl}
+                  alt={galleryImages[selectedImage].title}
+                  className="w-full h-full object-cover object-center"
+                  style={{
+                    imageRendering: 'crisp-edges',
+                    maxWidth: '100%',
+                    height: '100%'
+                  }}
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-0 left-0 right-0 p-8 text-white">
                   <h3 className="text-2xl font-bold mb-3">{galleryImages[selectedImage].title}</h3>
-                  <p className="text-slate-300 max-w-sm mx-auto">{galleryImages[selectedImage].description}</p>
+                  <p className="text-slate-300 max-w-sm">{galleryImages[selectedImage].description}</p>
                 </div>
               </div>
             </div>
@@ -69,12 +80,20 @@ const CathedralGallery = () => {
                 onClick={() => setSelectedImage(index)}
               >
                 <div className="flex items-center space-x-4">
-                  <div className={`w-16 h-16 rounded-lg flex items-center justify-center ${
-                    selectedImage === index 
-                      ? 'bg-white/20' 
-                      : 'bg-gradient-to-br from-amber-300 to-amber-500'
+                  <div className={`w-16 h-16 rounded-lg overflow-hidden flex-shrink-0 ${
+                    selectedImage === index
+                      ? 'ring-2 ring-white'
+                      : 'ring-1 ring-amber-300/30'
                   }`}>
-                    <span className="text-2xl">🏰</span>
+                    <img
+                      src={image.imageUrl}
+                      alt={image.title}
+                      className="w-full h-full object-cover object-center"
+                      style={{
+                        imageRendering: 'crisp-edges'
+                      }}
+                      loading="lazy"
+                    />
                   </div>
                   <div className="flex-1">
                     <h4 className={`text-lg font-semibold mb-1 ${

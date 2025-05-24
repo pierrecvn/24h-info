@@ -1,9 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { MotionPathPlugin } from 'gsap/MotionPathPlugin';
 import { useLightEffect } from './LightProvider';
 
-gsap.registerPlugin(ScrollTrigger);
+gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);
 
 export const HeroSection = () => {
   const heroRef = useRef<HTMLDivElement>(null);
@@ -18,35 +19,32 @@ export const HeroSection = () => {
   const lightBeamsRef = useRef<HTMLDivElement>(null);
   const fogRef = useRef<HTMLDivElement>(null);
 
-  // Utiliser notre hook d'effet lumineux spécifiquement pour le titre
   const { ref: titleRef, className: titleLightClass } = useLightEffect(1);
 
   useEffect(() => {
     if (!heroRef.current) return;
 
-    // Configuration initiale plus dramatique
     gsap.set([titleRef.current, cathedralRef.current], {
       opacity: 0,
       y: 80,
       scale: 0.9,
       rotationX: 15
     });
-    gsap.set(moonRef.current, {
-      x: '300px',
-      y: '-50px',
-      opacity: 0,
-      scale: 0.3,
-      rotation: -45
-    });
     gsap.set(starsRef.current, { opacity: 0, scale: 0.8 });
     gsap.set(particlesRef.current, { opacity: 0 });
     gsap.set(lightBeamsRef.current, { opacity: 0, scaleY: 0 });
     gsap.set(fogRef.current, { opacity: 0, x: '-100%' });
 
-    // Animation du soleil plus dynamique
-    gsap.set(sunRef.current, { scale: 1, opacity: 1 });
+    // Configuration initiale du soleil
+    gsap.set(sunRef.current, {
+      xPercent: 0,
+      yPercent: 0,
+      x: '80vw',      // Aligné avec le premier point de l'animation
+      y: '30vh',      // Aligné avec le premier point de l'animation
+      opacity: 1,
+      scale: 1
+    });
 
-    // Animation de pulsation améliorée pour le soleil
     const sunPulse = gsap.timeline({ repeat: -1 });
     sunPulse
         .to(sunRef.current, {
@@ -117,135 +115,127 @@ export const HeroSection = () => {
         trigger: heroRef.current,
         start: 'top top',
         end: 'bottom top',
-        scrub: 1,
+        scrub: 3,
         pin: true,
         anticipatePin: 1,
-        invalidateOnRefresh: true,
       }
     });
 
-    // Transition jour/nuit magistrale
+    // Séquence de couleurs naturelles pour le cycle jour/nuit
+    const skyColors = {
+      day: 'linear-gradient(180deg, #b5d6e6 0%, #c7e6f5 100%)',              // Bleu ciel doux
+      goldenHour: 'linear-gradient(180deg, #d9b897 0%, #eac4a3 100%)',      // Heure dorée
+      sunset: 'linear-gradient(180deg, #a86f5f 0%, #694b55 100%)',          // Coucher de soleil
+      bluehour: 'linear-gradient(180deg, #4a546d 0%, #2f3c56 100%)',        // Heure bleue
+      night: 'linear-gradient(180deg, #1a2238 0%, #0f172a 100%)'            // Nuit
+    };
+
+    // Transition jour/nuit améliorée
     scrollTl
-        // Phase 1: Coucher du soleil (0-20%)
-        .to(sunRef.current, {
-          y: '30vh',
-          scale: 1.3,
-          opacity: 0.8,
-          duration: 0.3,
-          ease: "power2.out",
-        }, 0)
-        .to(sunRaysRef.current, {
-          scale: 1.5,
-          opacity: 0.4,
-          rotation: "+=180",
-          duration: 0.3,
-          ease: "power2.out"
-        }, 0)
-           .to(skyRef.current, {
-                // background: 'linear-gradient(135deg, #ff6b35 0%, #f7931e 20%, #ffd23f 40%, #4ecdc4 60%, #45b7d1 80%, #96ceb4 100%)',
-                duration: 0.3,
-          ease: "power2.inOut"
-        }, 0)
+      // Animation des nuages
+      .to(cloudsRef.current, {
+        x: '-30%',
+        opacity: 0.4,
+        scale: 1.1,
+        duration: 3,
+        ease: "none"
+      }, 0)
+      .to(cloudsRef.current, {
+        opacity: 0.2,
+        scale: 1.2,
+        duration: 1,
+        ease: "power1.inOut"
+      }, 2)
 
-        // Phase 2: Crépuscule (20-40%)
-        .to([sunRef.current, sunRaysRef.current], {
-          opacity: 0,
-          y: '50vh',
-          scale: 0.5,
-          duration: 0.2,
-          ease: "power2.in",
-        }, 0.3)
-        .to(skyRef.current, {
-        //  background: 'linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%)',
-          duration: 0.2,
-          ease: "power2.inOut"
-        }, 0.3)
+      // Transition du ciel
+      .to(skyRef.current, {
+        background: skyColors.goldenHour,
+        duration: 0.8,
+        ease: "none"
+      })
+      .to(skyRef.current, {
+        background: skyColors.sunset,
+        duration: 0.8,
+        ease: "none"
+      })
+      .to(skyRef.current, {
+        background: skyColors.bluehour,
+        duration: 0.8,
+        ease: "none"
+      })
+      .to(skyRef.current, {
+        background: skyColors.night,
+        duration: 0.8,
+        ease: "none"
+      })
 
-        // Phase 3: Début de nuit (40-60%)
-        .to(skyRef.current, {
-         // background: 'linear-gradient(135deg, #2c3e50 0%, #34495e 20%, #4a6741 40%, #2c5530 60%, #0f3460 80%, #0c2461 100%)',
-          duration: 0.2,
-          ease: "power2.inOut"
-        }, 0.5)
+      // Illumination progressive de la cathédrale
+      .to(cathedralRef.current, {
+        filter: 'brightness(1.1) contrast(1.05) saturate(1.1)',  // Légère accentuation pour l'heure dorée
+        duration: 0.8,
+        ease: "power1.inOut"
+      }, 0)
+      .to(cathedralRef.current, {
+        filter: 'brightness(0.9) contrast(1.1) saturate(0.95)',  // Lumière du coucher de soleil
+        duration: 0.8,
+        ease: "power1.inOut"
+      }, 0.8)
+      .to(cathedralRef.current, {
+        filter: 'brightness(0.7) contrast(1.15) saturate(0.8)',  // Heure bleue
+        duration: 0.8,
+        ease: "power1.inOut"
+      }, 1.6)
+      .to(cathedralRef.current, {
+        filter: 'brightness(0.6) contrast(1.2) saturate(0.7)',   // Nuit
+        duration: 0.8,
+        ease: "power1.inOut"
+      }, 2.4)
 
-        // Apparition progressive des étoiles avec scintillement
-        .to(starsRef.current, {
-          opacity: 1,
-          scale: 1,
-          duration: 0.3,
-          ease: "back.out(1.7)"
-        }, 0.4)
+      // Transition du soleil avec mouvement en arc de cercle
+      .to(sunRef.current, {
+        motionPath: {
+          path: [
+            {x: '80vw', y: '30vh'},     // Position initiale (plus haut à droite)
+            {x: '40vw', y: '15vh'},     // Premier point de l'arc (plus haut)
+            {x: '0vw', y: '10vh'},      // Point culminant au-dessus de la cathédrale
+            {x: '-40vw', y: '30vh'},    // Point de descente
+            {x: '-80vw', y: '70vh'}     // Point de sortie (plus bas à gauche)
+          ],
+          curviness: 1.5,              // Augmentation de la courbure
+          autoRotate: false
+        },
+        duration: 4,
+        ease: "none"
+      }, 0)
 
-        // Phase 4: Nuit profonde (60-80%)
-        .to(skyRef.current, {
-          background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 30%, #334155 70%, #475569 100%)',
-          duration: 0.2,
-          ease: "power3.out"
-        }, 0.7)
+      // Animation de l'opacité du soleil
+      .to(sunRef.current, {
+        opacity: 0,
+        duration: 1,
+        ease: "power2.in"
+      }, 3)  // Commence à disparaître vers la fin du mouvement
 
-        // Animation des nuages plus complexe
-        .to(cloudsRef.current, {
-          x: '-120%',
-          opacity: 0.1,
-          rotation: 8,
-          scale: 1.1,
-          duration: 0.8,
-          ease: "power2.out"
-        }, 0.2)
+      // Transition des rayons du soleil
+      .to(sunRaysRef.current, {
+        opacity: 0.9,
+        scale: 1.1,
+        duration: 0.8,
+        ease: "power1.inOut"
+      }, 0)
+      .to(sunRaysRef.current, {
+        opacity: 0,
+        scale: 0.8,
+        duration: 1.6,
+        ease: "power1.inOut"
+      }, 0.8)
 
-        // Apparition majestueuse de la lune
-        .to(moonRef.current, {
-          x: '0px',
-          y: '0px',
-          opacity: 1,
-          scale: 1,
-          rotation: 0,
-          duration: 0.5,
-          ease: "elastic.out(1, 0.8)"
-        }, 0.6)
-
-        // Effets lumineux sur la cathédrale progressifs
-        .to(cathedralRef.current, {
-          filter: 'contrast(1.4) brightness(0.7) drop-shadow(0 0 30px rgba(251, 191, 36, 0.4))',
-          duration: 0.3
-        }, 0.7)
-        .to(cathedralRef.current, {
-          filter: 'contrast(1.5) brightness(0.8) drop-shadow(0 0 60px rgba(251, 191, 36, 0.7)) drop-shadow(0 0 120px rgba(251, 191, 36, 0.4))',
-          duration: 0.2
-        }, 0.8)
-
-        // Animation du titre avec effet de lueur progressive
-        .to(titleRef.current, {
-          textShadow: '0 0 10px rgba(251, 191, 36, 0.6)',
-          duration: 0.2
-        }, 0.9)
-        .to(titleRef.current, {
-          textShadow: '0 0 30px rgba(251, 191, 36, 0.9), 0 0 60px rgba(251, 191, 36, 0.6), 0 0 90px rgba(251, 191, 36, 0.3)',
-          duration: 0.3
-        }, 1)
-
-        // Particules magiques
-        .to(particlesRef.current, {
-          opacity: 1,
-          duration: 0.4,
-          ease: "power2.out"
-        }, 0.6)
-
-        // Rayons de lumière depuis la cathédrale
-        .to(lightBeamsRef.current, {
-          opacity: 0.6,
-          scaleY: 1,
-          duration: 0.4,
-          ease: "power3.out"
-        }, 0.8)
-
-        // Brouillard mystique final
-        .to(fogRef.current, {
-          opacity: 0.15,
-          x: '20%',
-          duration: 0.3,
-          ease: "power2.out"
-        }, 0.9);
+      // Apparition des étoiles
+      .to(starsRef.current, {
+        opacity: 0.7,
+        scale: 1,
+        duration: 1.6,
+        ease: "power1.inOut"
+      }, 2);
 
     // Animation continue de la lune (oscillation subtile)
     gsap.to(moonRef.current, {
@@ -255,8 +245,6 @@ export const HeroSection = () => {
       yoyo: true,
       ease: "sine.inOut"
     });
-
-
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -277,9 +265,17 @@ export const HeroSection = () => {
         {/* Soleil */}
         <div
             ref={sunRef}
-
+            className="absolute right-[20%] top-[20%] w-32 h-32 rounded-full"
+            style={{
+              background: 'radial-gradient(circle at 50% 50%, rgba(255,236,179,1) 0%, rgba(255,167,38,1) 100%)',
+              boxShadow: `
+                0 0 60px 15px rgba(255,236,179,0.4),
+                0 0 100px 30px rgba(255,167,38,0.3),
+                0 0 140px 45px rgba(255,167,38,0.2)
+              `,
+              transform: 'translate(0, 0)'  // Position initiale sans transformation
+            }}
         />
-
 
         {/* Nuages */}
         <div
@@ -287,9 +283,12 @@ export const HeroSection = () => {
             className="absolute inset-0 opacity-70"
             style={{
               backgroundImage: 'url("https://images.unsplash.com/photo-1504608524841-42fe6f032b4b?q=80&w=1800&auto=format&fit=crop")',
-              backgroundSize: 'cover',
+              backgroundSize: '150% cover', // Augmentation de la taille
               backgroundPosition: 'center',
-              mixBlendMode: 'soft-light'
+              mixBlendMode: 'soft-light',
+              WebkitMaskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+              maskImage: 'linear-gradient(to right, transparent, black 10%, black 90%, transparent)',
+              transform: 'scale(1.2)', // Scale initial pour éviter les bords vides
             }}
         />
 
@@ -349,17 +348,17 @@ export const HeroSection = () => {
             }}
         />
 
-        {/* Lune avec aura améliorée */}
+        {/* Lune (Premier croissant) */}
         <div
             ref={moonRef}
-            className="absolute right-10 top-32 w-32 h-32 rounded-full opacity-0"
+            className="absolute right-32 bottom-20 w-24 h-24 rounded-full opacity-0"
             style={{
-              background: 'radial-gradient(circle at 60% 40%, rgba(255,255,255,1) 0%, rgba(251, 191, 36, 0.8) 100%)',
+              background: 'radial-gradient(circle at 60% 50%, rgba(255,255,255,0.95) 0%, rgba(220,220,220,0.9) 100%)',
               boxShadow: `
-            0 0 40px 10px rgba(255,223,186,0.6),
-            0 0 80px 20px rgba(255,223,186,0.4),
-            0 0 120px 30px rgba(255,223,186,0.2)
-          `
+                inset -15px -2px 0px 0px rgba(0,0,0,0.8),
+                0 0 20px 5px rgba(255,255,255,0.4)
+              `,
+              transform: 'rotate(45deg)' // Orientation du croissant
             }}
         />
 
