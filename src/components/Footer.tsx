@@ -1,7 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Footer = () => {
+  const location = useLocation();
+
+  const handleNavigation = (path: string) => {
+    if (location.pathname === path) {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+  };
+
   return (
     <footer className="bg-slate-900 text-white py-16">
       <div className="container mx-auto px-6">
@@ -28,6 +36,7 @@ const Footer = () => {
                   <Link
                     to={link.path}
                     className="text-slate-300 hover:text-amber-300 transition-colors duration-300 relative group"
+                    onClick={() => handleNavigation(link.path)}
                   >
                     {link.name}
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-300 group-hover:w-full transition-all duration-300"></span>
