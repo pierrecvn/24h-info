@@ -1,5 +1,5 @@
-
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Footer = () => {
   return (
@@ -13,31 +13,25 @@ const Footer = () => {
               Une expérience immersive célébrant le patrimoine lumineux 
               de Lyon et la majesté de la Cathédrale Saint-Jean.
             </p>
-            <div className="flex space-x-4">
-              {[...Array(3)].map((_, i) => (
-                <div 
-                  key={i}
-                  className="w-10 h-10 bg-amber-500 rounded-full flex items-center justify-center hover:bg-amber-400 transition-colors duration-300 cursor-pointer transform hover:scale-110"
-                >
-                  <span className="text-slate-900 font-bold">L</span>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* Liens rapides */}
           <div className="space-y-6">
             <h4 className="text-xl font-semibold text-white">Explorer</h4>
             <ul className="space-y-3">
-              {['Accueil', 'Histoire', 'Galerie', 'Fête des Lumières', 'Contact'].map((link, index) => (
-                <li key={index}>
-                  <a 
-                    href="#" 
+              {[
+                { name: 'Accueil', path: '/' },
+                { name: 'Histoire', path: '/histoire' },
+                { name: 'Galerie', path: '/galerie' }
+              ].map((link) => (
+                <li key={link.path}>
+                  <Link
+                    to={link.path}
                     className="text-slate-300 hover:text-amber-300 transition-colors duration-300 relative group"
                   >
-                    {link}
+                    {link.name}
                     <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-300 group-hover:w-full transition-all duration-300"></span>
-                  </a>
+                  </Link>
                 </li>
               ))}
             </ul>

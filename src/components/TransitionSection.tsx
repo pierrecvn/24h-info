@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -8,9 +7,12 @@ const TransitionSection = () => {
   const sectionRef = useRef<HTMLDivElement>(null);
   const lightsRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!sectionRef.current) return;
+
+    gsap.registerPlugin(ScrollTrigger);
 
     // Animation du contenu principal
     gsap.fromTo(contentRef.current, {
@@ -28,34 +30,16 @@ const TransitionSection = () => {
       }
     });
 
-    // Animation des particules lumineuses améliorée
-    const lights = lightsRef.current?.children;
-    if (lights) {
-      Array.from(lights).forEach((light, index) => {
-        gsap.fromTo(light, {
-          opacity: 0,
-          scale: 0,
-          y: 100,
-          rotation: 0
-        }, {
-          opacity: 1,
-          scale: 1,
-          y: 0,
-          rotation: 360,
-          duration: 3,
-          delay: index * 0.3,
-          repeat: -1,
-          yoyo: true,
-          ease: "power2.inOut",
-          scrollTrigger: {
-            trigger: sectionRef.current,
-            start: 'top center',
-            end: 'bottom center',
-            toggleActions: 'play none none reverse'
-          }
-        });
-      });
-    }
+    // Animation de la transition jour/nuit
+    const tl = gsap.timeline({
+      scrollTrigger: {
+        trigger: sectionRef.current,
+        start: 'top center',
+        end: 'bottom center',
+        scrub: 2
+      }
+    });
+
 
     return () => {
       ScrollTrigger.getAll().forEach(trigger => trigger.kill());
@@ -63,27 +47,17 @@ const TransitionSection = () => {
   }, []);
 
   return (
-    <div ref={sectionRef} className="relative min-h-screen bg-gradient-to-b from-slate-900 via-slate-800 to-slate-900 overflow-hidden">
-      {/* Effets de lumière flottants améliorés */}
-      <div ref={lightsRef} className="absolute inset-0">
-        {[...Array(15)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute rounded-full"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              width: `${8 + Math.random() * 16}px`,
-              height: `${8 + Math.random() * 16}px`,
-              background: `radial-gradient(circle, ${
-                ['rgba(251, 191, 36, 0.8)', 'rgba(255, 255, 255, 0.6)', 'rgba(251, 146, 60, 0.7)'][Math.floor(Math.random() * 3)]
-              }, transparent)`,
-              filter: 'blur(1px)',
-              boxShadow: `0 0 ${20 + Math.random() * 20}px rgba(251, 191, 36, 0.4)`
-            }}
-          />
-        ))}
-      </div>
+    <div ref={sectionRef} className="relative min-h-screen overflow-hidden bg-slate-900">
+      {/* Overlay pour la transition jour/nuit avec préservation de la texture */}
+      <div
+        ref={overlayRef}
+        className="absolute inset-0 transition-all duration-1000"
+        style={{
+          background: 'linear-gradient(180deg, rgba(135, 206, 235, 0.3) 0%, rgba(182, 227, 255, 0.3) 100%)',
+          mixBlendMode: 'multiply',
+          pointerEvents: 'none'
+        }}
+      />
 
       {/* Motif de fond subtil */}
       <div className="absolute inset-0 opacity-10">
@@ -94,7 +68,29 @@ const TransitionSection = () => {
 
       {/* Contenu de la section */}
       <div className="relative z-10 flex items-center justify-center min-h-screen">
-        <div ref={contentRef} className="text-center text-white max-w-5xl px-6 py-20">
+        {/* Effets de lumière flottants */}
+        <div ref={lightsRef} className="absolute inset-0 z-20">
+          {[...Array(15)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full floating-light"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                width: `${8 + Math.random() * 16}px`,
+                height: `${8 + Math.random() * 16}px`,
+                background: `radial-gradient(circle, ${
+                  ['rgba(251, 191, 36, 0.8)', 'rgba(255, 255, 255, 0.6)', 'rgba(251, 146, 60, 0.7)'][Math.floor(Math.random() * 3)]
+                }, transparent)`,
+                filter: 'blur(1px)',
+                boxShadow: `0 0 ${20 + Math.random() * 20}px rgba(251, 191, 36, 0.4)`,
+                animationDelay: `${Math.random() * 2}s`
+              }}
+            />
+          ))}
+        </div>
+
+        <div ref={contentRef} className="relative z-30 text-center text-white max-w-5xl px-6 py-20">
           <h2 className="text-6xl md:text-7xl font-bold mb-8 bg-gradient-to-r from-white via-amber-100 to-amber-300 bg-clip-text text-transparent">
             La Magie de la
             <span className="block text-amber-300 mt-2">Fête des Lumières</span>
